@@ -1,31 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Models;
 
-public class PlayerShip : MonoBehaviour {
+public class PlayerShip : SpaceShip
+{
 
-    [Range(0, 20)]
-    public int speed;
+    private float yPosition = 0;
+    private float modifier;
 
 	// Use this for initialization
-	void Start () {
-		
+	void Start ()
+    {
+        this.modifier = Camera.main.transform.position.z;
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
         if (Input.GetMouseButton(0))
         {
-            var target = new Vector3(Input.mousePosition.x - 540, 0, 0);
-            this.transform.position = Vector3.MoveTowards(this.transform.position, target, this.speed * Time.deltaTime);
-            if (target.x > 0)
-            {
-                this.transform.Rotate(Vector3.forward * -this.speed * Time.deltaTime);
-            }
-            else
-            {
-                this.transform.Rotate(Vector3.forward * this.speed * Time.deltaTime);
-            }
+            var mousePostion = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+            var target = new Vector3(mousePostion.x * this.modifier, this.yPosition, mousePostion.y * this.modifier);
+            this.transform.position = Vector3.MoveTowards(this.transform.position, target, this.speed);
+            //this.transform.position = new Vector3(target.x, this.distance, target.y);
         }
     }
 }
